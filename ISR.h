@@ -111,6 +111,7 @@ void __attribute__((__interrupt__, auto_psv)) _T7Interrupt(void)
     _T7IF = 0; // clear TMR7 interrupt flag
 }
 
+// this ISR gets new time/weather data from the internet every ? minutes.
 void __attribute__((__interrupt__, auto_psv)) _T9Interrupt(void)
 {
     TMR9 = 0; // reset timer 9
