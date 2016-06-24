@@ -12,21 +12,21 @@
 
 typedef struct 
 {
-    char data_buf[FIFO_BUFFER_SIZE]; // FIFO buffer
-    int i_first;                    // index of oldest data byte in buffer
-    int i_last;                     // index of newest data byte in buffer
-    int num_bytes;                  // number of bytes currently in buffer
+    volatile char data_buf[FIFO_BUFFER_SIZE]; // FIFO buffer
+    volatile int i_first;                    // index of oldest data byte in buffer
+    volatile int i_last;                     // index of newest data byte in buffer
+    volatile int num_bytes;                  // number of bytes currently in buffer
 }fifo_UART1;
 
 fifo_UART1 U1_rx_fifo = { {0}, 0, 0, 0 }; // declare a receive software buffer
 fifo_UART1 U1_tx_fifo = { {0}, 0, 0, 0 }; // declare a transmit software buffer
 
-typedef struct 
+typedef volatile struct 
 {
-    char data_buf[4096];            // FIFO buffer
-    int i_first;                    // index of oldest data byte in buffer
-    int i_last;                     // index of newest data byte in buffer
-    int num_bytes;                  // number of bytes currently in buffer
+    volatile char data_buf[4096];            // FIFO buffer
+    volatile int i_first;                    // index of oldest data byte in buffer
+    volatile int i_last;                     // index of newest data byte in buffer
+    volatile int num_bytes;                  // number of bytes currently in buffer
 }fifo_UART2;
 
 fifo_UART2 U2_rx_fifo = { {0}, 0, 0, 0 }; // declare a receive software buffer
@@ -35,18 +35,18 @@ fifo_UART2 U2_tx_fifo = { {0}, 0, 0, 0 }; // declare a transmit software buffer
 typedef unsigned char BOOL; // typedef unsigned char to BOOL
 typedef struct my_booleans  // create a structure of booleans
 {
-  BOOL repeatMode:1;
-  BOOL timeMode:1;
-  BOOL directCommand:1;
-  BOOL failedWifi:1;
-  BOOL bootComplete:1;
-  BOOL reconnectAttempt:1;
-  BOOL wifiEntry:1;
-  BOOL wifiInfoSSID:1;
-  BOOL wifiInfoPW:1;
-  BOOL stopWifiChecks:1;
-  BOOL apListEntry:1;
-  BOOL connectOnBoot:1;
+  volatile BOOL repeatMode:1;
+  volatile BOOL timeMode:1;
+  volatile BOOL directCommand:1;
+  volatile BOOL failedWifi:1;
+  volatile BOOL bootComplete:1;
+  volatile BOOL reconnectAttempt:1;
+  volatile BOOL wifiEntry:1;
+  volatile BOOL wifiInfoSSID:1;
+  volatile BOOL wifiInfoPW:1;
+  volatile BOOL stopWifiChecks:1;
+  volatile BOOL apListEntry:1;
+  volatile BOOL connectOnBoot:1;
 }
 my_booleans_t;
 my_booleans_t boolean;
@@ -64,10 +64,7 @@ typedef struct
 tm;
 tm times;
 
-int pos = 0;
-
-
-int httpError = 1;
+volatile int httpError = 1;
 
 static char* checkConnection = "print(wifi.sta.status())";
 
@@ -86,37 +83,41 @@ static char* wifiConnect = "wifi.sta.connect()";
 
 static char* skCreateConn = "sk=net.createConnection(net.TCP, 0)";
 static char* skOn = "sk:on(\"receive\", function(sck, c) print(c) end )";
-static char* skConn = "sk:connect(80,\"api.thingspeak.com\")";
+static char* skConnThingSpeak = "sk:connect(80,\"api.thingspeak.com\")";
+static char* skConnServer = "sk:connect(8000,\"10.0.0.10\")";
 static char* skSendWeather = "sk:send(\"GET /apps/thinghttp/send_request?api_key=PT5411BJZQ166HUD HTTP/1.1\\r\\nHost: api.thingspeak.com\\r\\nConnection: keep-alive\\r\\nAccept: */*\\r\\n\\r\\n\")";
 static char* skSendTime = "sk:send(\"GET /apps/thinghttp/send_request?api_key=3SJCIKZD34KKFIQB HTTP/1.1\\r\\nHost: api.thingspeak.com\\r\\nConnection: keep-alive\\r\\nAccept: */*\\r\\n\\r\\n\")";
+static char* skPOST_0 = "sk:send(\"POST /brewing/log HTTP/1.1\\r\\nHost: 10.0.0.10:8000\\r\\nContent-Type: application/x-www-form-urlencoded\\r\\nContent-Length: ";
+static char* skPOST_1 = "\\r\\n\\r\\ntemp=";
 
-char *c_time_string;
-char unixTime[32];
-char weekDay[32];
-char Month[32];
-char Date[32];
-char Hour[32];
-char Minute[32];
-char Second[32];
-char Year[32];
+volatile char *c_time_string;
+volatile char unixTime[32];
+volatile char weekDay[32];
+volatile char Month[32];
+volatile char Date[32];
+volatile char Hour[32];
+volatile char Minute[32];
+volatile char Second[32];
+volatile char Year[32];
 
-char SSID[64];
-char password[64];
-char wifiInfo[256];
+volatile char SSID[64];
+volatile char password[64];
+volatile char wifiInfo[256];
+static char* tempLength = "7";
 
-unsigned long YearInt = 0;
-unsigned long DateInt = 0;
-unsigned long HourInt = 0;
-unsigned long MinuteInt = 0;
-unsigned long SecondInt = 0;
+volatile unsigned long YearInt = 0;
+volatile unsigned long DateInt = 0;
+volatile unsigned long HourInt = 0;
+volatile unsigned long MinuteInt = 0;
+volatile unsigned long SecondInt = 0;
 
-char numToString[32];
+volatile char numToString[32];
 
-char displayTemp[32];
-char displayFeel[32];
-char displayHumidity[32];
-char displayCondition[32];
+volatile char displayTemp[32];
+volatile char displayFeel[32];
+volatile char displayHumidity[32];
+volatile char displayCondition[32];
 
-char parsedDataBuffer[32];
+volatile char parsedDataBuffer[32];
 
-char httpOKBuffer[32];
+volatile char httpOKBuffer[32];
