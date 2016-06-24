@@ -105,9 +105,11 @@ void serialMode(void)
             txString1("\r\nGetting new weather data from the internet...\n\n\rPlease wait...\n\n\r");
             //boolean.directCommand = TRUE;
             boolean.repeatMode = TRUE;
+            boolean.stopWifiChecks = TRUE;
             getWeather();
             //boolean.directCommand = FALSE;
             boolean.repeatMode = FALSE;
+            boolean.stopWifiChecks = FALSE;
             txString1("Done!\n\n\r");
         }
         else
@@ -132,10 +134,13 @@ void serialMode(void)
             txString1("\r\nNo internet connection! Use 'CONNECT AP' command!\n\n\r");
         }
     }
-    else if(compareStrings(U1_rx_fifo.data_buf, "set time") == 0)
+    else if(compareStrings(U1_rx_fifo.data_buf, "send data") == 0)
     {
-        // do something else
-        txString1("Enter the current time in 24 hour format (HH:MM:SS).\n\n\r");
+        boolean.repeatMode = TRUE;
+        boolean.stopWifiChecks = TRUE;
+        postToServer();
+        boolean.repeatMode = FALSE;
+        boolean.stopWifiChecks = FALSE;
     }
     else if(compareStrings(U1_rx_fifo.data_buf, "show time") == 0)
     {
