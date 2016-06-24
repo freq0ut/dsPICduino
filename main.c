@@ -50,7 +50,6 @@ int main(void)
     /*SETUP*/
     setUp(); // this function runs once on start-up
     boolean.bootComplete = TRUE; // boot setup completed
-    txString1("\n\rSetup Complete!\n\n\r");
     blinkDebug1(5); // blink debug LED upon setup completion
 
     /*INFINITE LOOP*/
