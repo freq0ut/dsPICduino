@@ -92,7 +92,7 @@ int compareStrings(char* s1, char* s2)
     return 1;
 }
 
-void concatStrings(char *ssid, char *pw)
+void concatStringsWifi(char *ssid, char *pw)
 {
     int i;
     for(i = 0; i < 256; i++)
@@ -105,5 +105,20 @@ void concatStrings(char *ssid, char *pw)
     strcat(&wifiInfo[0], ssid);
     strcat(&wifiInfo[0], wifiInfo_1);
     strcat(&wifiInfo[0], pw);
+    strcat(&wifiInfo[0], wifiInfo_2);
+}
+
+void concatStringsServer(char *length, char *temp)
+{
+    int i;
+    for(i = 0; i < 256; i++)
+    {
+        wifiInfo[i] = '\0';
+    }
+    
+    strcpy(&wifiInfo[0], skPOST_0);
+    strcat(&wifiInfo[0], length);
+    strcat(&wifiInfo[0], skPOST_1);
+    strcat(&wifiInfo[0], temp);
     strcat(&wifiInfo[0], wifiInfo_2);
 }
