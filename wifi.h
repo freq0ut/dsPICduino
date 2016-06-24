@@ -28,8 +28,12 @@ void checkForWifiConnection(void)
     {
         doOnce = FALSE;
     }
+    else
+    {
+        boolean.connectOnBoot = TRUE;
+    }
 
-    while(wifiStatus != 5 && boolean.wifiEntry == FALSE) // while failed connection and not attempting to make a connection
+    while(wifiStatus != 5 && boolean.wifiEntry == FALSE && boolean.apListEntry == FALSE) // while failed connection and not attempting to make a connection
     {
         if(doOnce == FALSE)
         {
@@ -97,7 +101,7 @@ void weatherFromThingSpeak(void)
 {
     sendCommandToWifi(skCreateConn, 500);
     sendCommandToWifi(skOn, 500);
-    sendCommandToWifi(skConn, 500);
+    sendCommandToWifi(skConnThingSpeak, 500);
     sendCommandToWifi(skSendWeather, 5000);
 }
 
@@ -105,7 +109,7 @@ void timeFromThingSpeak(void)
 {
     sendCommandToWifi(skCreateConn, 500);
     sendCommandToWifi(skOn, 500);
-    sendCommandToWifi(skConn, 500);
+    sendCommandToWifi(skConnThingSpeak, 500);
     sendCommandToWifi(skSendTime, 5000);
 }
 
@@ -130,6 +134,7 @@ void getWeather(void)
             lookForKeyword(conditionKey, &displayCondition[0], 2, 20);
         }
     }
+    //postToServer();
 }
 
 void getTime(void)
@@ -306,6 +311,7 @@ void listAPs(void)
     boolean.directCommand = FALSE;
     boolean.repeatMode = FALSE;
     boolean.apListEntry = FALSE;
+    boolean.wifiEntry = FALSE;
     if(boolean.connectOnBoot == TRUE)
         boolean.stopWifiChecks = FALSE;
     txString1("\r\nDone!\n\n\r");
@@ -339,7 +345,7 @@ void connectToAP(void)
     txString1(&password[0]);
     txString1(" ...\n\r\n\r");
     
-    concatStrings(&SSID[0],&password[0]);
+    concatStringsWifi(&SSID[0],&password[0]);
     
     sendCommandToWifi(setMode, 500);
     sendCommandToWifi(wifiDisconnect, 500);
@@ -379,4 +385,13 @@ void connectToAP(void)
     boolean.stopWifiChecks = FALSE;
     boolean.connectOnBoot = TRUE;
     txString1("\n\rDone!\n\r\n\r");
+}
+
+void postToServer(void)
+{   
+    concatStringsServer(tempLength,&displayFeel[0]);
+    txString1("Posted to server!\r\n");
+    sendCommandToWifi(skCreateConn, 500);
+    sendCommandToWifi(skConnServer, 500);
+    sendCommandToWifi(wifiInfo, 1000);
 }
