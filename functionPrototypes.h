@@ -22,6 +22,7 @@ void postWeatherToLCD(void);
 void postTimeToLCD(void);
 void listAPs(void);
 void connectToAP(void);
+void postToServer(void);
 /*----------------------------------------------------------------------------*/
 
 
@@ -30,6 +31,8 @@ void connectToAP(void);
 void lookForKeyword(char* keyword, char* dstBuff, int numToSkip, int numToPrint);
 void moveBuffToString();
 int compareStrings(char s1[FIFO_BUFFER_SIZE], char* s2);
+void concatStringsWifi(char *ssid, char *pw);
+void concatStringsServer(char *length, char *temp);
 /*----------------------------------------------------------------------------*/
 
 
@@ -71,7 +74,7 @@ void txUART2(char c);
 void txString2(char *s);
 void serialMode(void);
 void clearUART1DataBuff(void);
-void concatStrings(char *ssid, char *pw);
+
 /*----------------------------------------------------------------------------*/
 
 
